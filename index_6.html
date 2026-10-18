@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NerdOps — Your Nerdy Best Friend in IT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1a8fff;
+      --blue-dim: #0e5faa;
+      --blue-glow: rgba(26,143,255,0.18);
+      --bg: #04080f;
+      --surface: #080f1a;
+      --surface2: #0c1525;
+      --border: #0e1e35;
+      --text: #d8e8f8;
+      --text-dim: #6888aa;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --syne: 'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 64px;
+      background: rgba(4,8,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo svg { width: 44px; height: 52px; }
+    .nav-wordmark {
+      font-family: var(--syne);
+      font-size: 22px; font-weight: 800;
+      color: #e8f4ff;
+      letter-spacing: -0.02em;
+    }
+    .nav-wordmark em { color: var(--blue); font-style: normal; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 14px; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--blue); }
+
+    .nav-cta {
+      background: var(--blue);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text-dim); border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 100px 5% 80px;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(26,143,255,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      background: rgba(26,143,255,0.08);
+      border: 1px solid rgba(26,143,255,0.2);
+      border-radius: 100px;
+      font-family: var(--mono); font-size: 11px;
+      color: var(--blue); letter-spacing: 0.18em;
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .hero-logo-wrap { margin-bottom: 32px; }
+    .hero-logo-wrap svg { width: 90px; height: 108px; }
+
+    h1 {
+      font-family: var(--syne);
+      font-size: clamp(38px, 7vw, 76px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #eef6ff;
+      margin-bottom: 12px;
+    }
+    h1 em { color: var(--blue); font-style: normal; }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 21px);
+      color: var(--text-dim);
+      font-weight: 300;
+      margin-bottom: 44px;
+      max-width: 540px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .hero-actions {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 8px;
+      font-weight: 600; font-size: 15px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--blue);
+      padding: 14px 30px;
+      border-radius: 8px; border: 1.5px solid var(--blue-dim);
+      font-weight: 600; font-size: 15px;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .btn-outline:hover {
+      background: rgba(26,143,255,0.07);
+      border-color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .hero-stats {
+      display: flex; gap: 40px; justify-content: center;
+      margin-top: 64px; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: var(--syne); font-size: 32px; font-weight: 800;
+      color: var(--blue);
+    }
+    .stat-label {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-dim); letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 96px 5%; }
+
+    .section-tag {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--blue); letter-spacing: 0.2em;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-family: var(--syne);
+      font-size: clamp(28px, 4.5vw, 48px);
+      font-weight: 800; letter-spacing: -0.02em;
+      color: #eef6ff;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-dim); font-size: 17px; font-weight: 300;
+      max-width: 520px; margin-bottom: 56px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--surface); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 20px;
+    }
+
+    .service-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color 0.2s, transform 0.15s;
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .service-card:hover { border-color: var(--blue-dim); transform: translateY(-3px); }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon {
+      width: 44px; height: 44px;
+      background: rgba(26,143,255,0.1);
+      border: 1px solid rgba(26,143,255,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .service-card h3 {
+      font-family: var(--syne);
+      font-size: 17px; font-weight: 700;
+      color: #eef6ff; margin-bottom: 10px;
+    }
+
+    .service-card p {
+      font-size: 14px; color: var(--text-dim);
+      line-height: 1.65;
+    }
+
+    /* ── PRICING ── */
+    #pricing { background: var(--bg); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 26px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.15s;
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--blue);
+      background: rgba(26,143,255,0.06);
+    }
+    .pricing-card.featured::after {
+      content: 'MOST POPULAR';
+      position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+      background: var(--blue);
+      color: #fff;
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+      padding: 4px 12px;
+      border-radius: 0 0 8px 8px;
+    }
+    .pricing-card:hover { border-color: var(--blue-dim); transform: translateY(-3px); }
+
+    .pricing-name {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-dim); letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+    .pricing-price {
+      font-family: var(--syne); font-size: 42px; font-weight: 800;
+      color: var(--blue); line-height: 1;
+    }
+    .pricing-period {
+      font-size: 14px; color: var(--text-dim);
+      margin-top: 4px; margin-bottom: 20px;
+    }
+    .pricing-desc {
+      font-size: 14px; color: var(--text-dim);
+      margin-bottom: 24px; line-height: 1.6;
+    }
+    .pricing-card a {
+      display: block;
+      background: transparent;
+      border: 1.5px solid var(--blue-dim);
+      color: var(--blue);
+      border-radius: 7px; padding: 10px 0;
+      font-weight: 600; font-size: 13px;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .pricing-card a:hover { background: rgba(26,143,255,0.1); border-color: var(--blue); }
+    .pricing-card.featured a {
+      background: var(--blue); color: #fff; border-color: var(--blue);
+    }
+    .pricing-card.featured a:hover { opacity: 0.88; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--surface); }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+
+    .about-text p {
+      color: var(--text-dim); font-size: 16px; margin-bottom: 18px; line-height: 1.75;
+    }
+
+    .about-pills {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(26,143,255,0.07);
+      border: 1px solid rgba(26,143,255,0.18);
+      border-radius: 100px; padding: 6px 14px;
+      font-family: var(--mono); font-size: 12px;
+      color: var(--blue);
+    }
+
+    .about-visual {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .terminal-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+    .terminal-title {
+      font-family: var(--mono); font-size: 12px;
+      color: var(--text-dim); margin-left: auto;
+    }
+
+    .terminal-body {
+      font-family: var(--mono); font-size: 13px;
+      line-height: 1.9;
+    }
+    .t-prompt { color: var(--blue); }
+    .t-cmd { color: #e8f4ff; }
+    .t-out { color: #4daa88; }
+    .t-comment { color: var(--text-dim); }
+    .cursor {
+      display: inline-block; width: 8px; height: 13px;
+      background: var(--blue);
+      animation: blink 1.2s infinite;
+      vertical-align: -2px;
+    }
+    @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg); }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: start;
+    }
+
+    .contact-info h2 { margin-bottom: 14px; }
+    .contact-info p { color: var(--text-dim); font-size: 16px; margin-bottom: 32px; }
+
+    .contact-items { display: flex; flex-direction: column; gap: 16px; }
+    .contact-item {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .contact-item-icon {
+      width: 40px; height: 40px;
+      background: rgba(26,143,255,0.1);
+      border: 1px solid rgba(26,143,255,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .contact-item-label {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-dim); letter-spacing: 0.1em;
+    }
+    .contact-item-val {
+      font-size: 15px; color: var(--text);
+      font-weight: 500;
+    }
+
+    form { display: flex; flex-direction: column; gap: 16px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    label {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-dim); letter-spacing: 0.1em;
+      display: block; margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: var(--sans); font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-dim); }
+    textarea { resize: vertical; min-height: 120px; }
+    select { appearance: none; cursor: pointer; }
+
+    .form-submit {
+      background: var(--blue); color: #fff;
+      border: none; border-radius: 8px;
+      padding: 14px 28px;
+      font-family: var(--sans); font-weight: 600; font-size: 15px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .form-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 40px 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+    }
+
+    .footer-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .footer-brand svg { width: 32px; height: 38px; }
+    .footer-brand span {
+      font-family: var(--syne); font-size: 18px; font-weight: 800;
+      color: #eef6ff; letter-spacing: -0.02em;
+    }
+    .footer-brand em { color: var(--blue); font-style: normal; }
+
+    .footer-copy {
+      font-family: var(--mono); font-size: 12px;
+      color: var(--text-dim); letter-spacing: 0.05em;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 64px; left: 0; right: 0;
+        background: rgba(4,8,15,0.97);
+        padding: 20px 5%;
+        border-bottom: 1px solid var(--border);
+      }
+      .hamburger { display: flex; }
+      .about-inner, .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero-stats { gap: 28px; }
+      nav { position: sticky; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <svg viewBox="0 0 68 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        @keyframes logoBlink{0%,49%{opacity:0.8}50%,100%{opacity:0}}
+      </style>
+      <!-- hex outer -->
+      <polygon points="34,3 62,20 62,55 34,72 6,55 6,20" fill="#030a14" stroke="#1a8fff" stroke-width="1.8"/>
+      <!-- inner dashed ring -->
+      <polygon points="34,10 57,24 57,51 34,65 11,51 11,24" fill="none" stroke="#1a8fff" stroke-width="0.6" stroke-dasharray="3,2.5" opacity="0.5"/>
+      <!-- armor top plate -->
+      <polygon points="34,3 62,20 48,20 34,10 20,20 6,20" fill="#071828" opacity="0.9"/>
+      <!-- top tick -->
+      <line x1="34" y1="3" x2="34" y2="10" stroke="#1a8fff" stroke-width="2.2"/>
+      <!-- corner ticks -->
+      <line x1="62" y1="20" x2="57" y2="24" stroke="#1a8fff" stroke-width="1.4" opacity="0.6"/>
+      <line x1="6" y1="20" x2="11" y2="24" stroke="#1a8fff" stroke-width="1.4" opacity="0.6"/>
+      <!-- glasses left lens -->
+      <rect x="13" y="32" width="19" height="15" rx="6" fill="none" stroke="#1a8fff" stroke-width="2.2"/>
+      <!-- glasses right lens -->
+      <rect x="36" y="32" width="19" height="15" rx="6" fill="none" stroke="#1a8fff" stroke-width="2.2"/>
+      <!-- bridge -->
+      <line x1="32" y1="39.5" x2="36" y2="39.5" stroke="#1a8fff" stroke-width="2.2"/>
+      <!-- left arm -->
+      <line x1="13" y1="39.5" x2="9" y2="39.5" stroke="#1a8fff" stroke-width="2" stroke-linecap="round"/>
+      <!-- right arm -->
+      <line x1="55" y1="39.5" x2="59" y2="39.5" stroke="#1a8fff" stroke-width="2" stroke-linecap="round"/>
+      <!-- left lens glare -->
+      <rect x="17" y="34" width="6" height="3.5" rx="1.8" fill="#1a8fff" opacity="0.35"/>
+      <!-- right lens glare -->
+      <rect x="40" y="34" width="6" height="3.5" rx="1.8" fill="#1a8fff" opacity="0.35"/>
+      <!-- cursor blink (right lens) -->
+      <rect x="42" y="41" width="8" height="3.5" rx="1.2" fill="#1a8fff" style="animation:logoBlink 1.2s infinite"/>
+    </svg>
+    <span class="nav-wordmark">Nerd<em>Ops</em></span>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Get a Free Audit</a></li>
+  </ul>
+
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div>
+    <div class="hero-badge">NOW ACCEPTING CLIENTS</div>
+    <div class="hero-logo-wrap">
+      <svg viewBox="0 0 68 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <style>@keyframes heroLogoBlink{0%,49%{opacity:0.8}50%,100%{opacity:0}}</style>
+        <polygon points="34,3 62,20 62,55 34,72 6,55 6,20" fill="#030a14" stroke="#1a8fff" stroke-width="1.6"/>
+        <polygon points="34,10 57,24 57,51 34,65 11,51 11,24" fill="none" stroke="#1a8fff" stroke-width="0.6" stroke-dasharray="3,2.5" opacity="0.4"/>
+        <polygon points="34,3 62,20 48,20 34,10 20,20 6,20" fill="#071828" opacity="0.9"/>
+        <line x1="34" y1="3" x2="34" y2="10" stroke="#1a8fff" stroke-width="2.2"/>
+        <line x1="62" y1="20" x2="57" y2="24" stroke="#1a8fff" stroke-width="1.4" opacity="0.6"/>
+        <line x1="6" y1="20" x2="11" y2="24" stroke="#1a8fff" stroke-width="1.4" opacity="0.6"/>
+        <rect x="13" y="32" width="19" height="15" rx="6" fill="none" stroke="#1a8fff" stroke-width="2.2"/>
+        <rect x="36" y="32" width="19" height="15" rx="6" fill="none" stroke="#1a8fff" stroke-width="2.2"/>
+        <line x1="32" y1="39.5" x2="36" y2="39.5" stroke="#1a8fff" stroke-width="2.2"/>
+        <line x1="13" y1="39.5" x2="9" y2="39.5" stroke="#1a8fff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="55" y1="39.5" x2="59" y2="39.5" stroke="#1a8fff" stroke-width="2" stroke-linecap="round"/>
+        <rect x="17" y="34" width="6" height="3.5" rx="1.8" fill="#1a8fff" opacity="0.35"/>
+        <rect x="40" y="34" width="6" height="3.5" rx="1.8" fill="#1a8fff" opacity="0.35"/>
+        <rect x="42" y="41" width="8" height="3.5" rx="1.2" fill="#1a8fff" style="animation:heroLogoBlink 1.2s infinite"/>
+      </svg>
+    </div>
+    <h1>Your Nerdy Best<br/>Friend in <em>IT</em></h1>
+    <p class="hero-sub">Enterprise-grade IT support for small businesses — without the enterprise price tag.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Get a Free IT Audit →</a>
+      <a href="#services" class="btn-outline">See What We Do</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">$0</div>
+        <div class="stat-label">AUDIT COST</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24hr</div>
+        <div class="stat-label">RESPONSE TIME</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">8+</div>
+        <div class="stat-label">IT SERVICES</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">$350</div>
+        <div class="stat-label">RETAINER/MO</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="section-tag">// WHAT WE DO</div>
+  <h2>Full-Stack IT Services</h2>
+  <p class="section-desc">From identity management to cameras on the wall — NerdOps handles the tech so you can handle business.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">☁️</div>
+      <h3>Microsoft 365 Administration</h3>
+      <p>Tenant setup, audits, license optimization, Exchange mail flow, SharePoint, Teams — the full M365 stack managed by an expert.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔐</div>
+      <h3>Okta Identity Management</h3>
+      <p>SSO configuration, MFA enforcement, app integrations, user lifecycle automation. One login to rule them all.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🖥️</div>
+      <h3>Active Directory</h3>
+      <p>AD health checks, user provisioning, group policies, onboarding/offboarding workflows, and PowerShell automation.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌐</div>
+      <h3>Network Setup & Deployment</h3>
+      <p>Wired and wireless network design, VLAN configuration, firewall rules, and switch deployment for small offices.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📷</div>
+      <h3>CCTV Deployment</h3>
+      <p>Security camera installation and configuration, NVR/DVR setup, remote viewing access, and cable management.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📞</div>
+      <h3>VoIP Phone Systems</h3>
+      <p>Business phone system setup and configuration, extension management, voicemail-to-email, and call routing.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎥</div>
+      <h3>Zoom Administration</h3>
+      <p>License management, room system setup, user hygiene, SSO integration, and mass configuration via Zoom API.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛡️</div>
+      <h3>Monthly IT Retainer</h3>
+      <p>Your personal IT department on call. Day-to-day support, proactive monitoring, and strategic IT guidance — one flat monthly fee.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="section-tag">// TRANSPARENT PRICING</div>
+  <h2>Flat-Rate. No Surprises.</h2>
+  <p class="section-desc">No hourly billing, no hidden fees, no long-term contracts. You always know what you're paying.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-name">ACTIVE DIRECTORY CHECK</div>
+      <div class="pricing-price">$299</div>
+      <div class="pricing-period">one-time flat rate</div>
+      <div class="pricing-desc">Full AD audit, stale account cleanup, group policy review, and a written report with action items.</div>
+      <a href="#contact">Book Now</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-name">M365 TENANT AUDIT</div>
+      <div class="pricing-price">$499</div>
+      <div class="pricing-period">one-time flat rate</div>
+      <div class="pricing-desc">Complete Microsoft 365 audit — licenses, security, mail flow, permissions — with a cleanup and documentation package.</div>
+      <a href="#contact">Book Now</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-name">MONTHLY IT RETAINER</div>
+      <div class="pricing-price">$350</div>
+      <div class="pricing-period">per month</div>
+      <div class="pricing-desc">Your on-call IT team. Day-to-day support, user management, and proactive monitoring. Cancel anytime.</div>
+      <a href="#contact">Get Started</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-name">OKTA SSO SETUP</div>
+      <div class="pricing-price">$799</div>
+      <div class="pricing-period">one-time flat rate</div>
+      <div class="pricing-desc">End-to-end Okta deployment for your organization — app integrations, MFA, user provisioning, and staff training.</div>
+      <a href="#contact">Book Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <div class="section-tag">// ABOUT NERDOPS</div>
+      <h2>Real IT Expertise. Human Prices.</h2>
+      <p>NerdOps was built around one idea: small businesses deserve access to the same level of IT expertise that Fortune 500 companies have — without paying Fortune 500 prices.</p>
+      <p>We're IT nerds who love what we do. Microsoft 365, Active Directory, Okta, network infrastructure, cameras, phones — we've set it all up, broken it, fixed it, and documented it. Now we do that for businesses that need it.</p>
+      <p>No sales team. No ticket queues. You work directly with Carlos, founder and lead engineer, and you get the work done right the first time.</p>
+      <div class="about-pills">
+        <span class="pill">🏅 M365 Certified</span>
+        <span class="pill">🔑 Okta Specialist</span>
+        <span class="pill">⚡ PowerShell</span>
+        <span class="pill">🌐 Network Design</span>
+        <span class="pill">📷 CCTV Install</span>
+        <span class="pill">📞 VoIP Config</span>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="terminal-header">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="terminal-title">nerdops-audit.sh</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./run-audit --client acme-co</span></div>
+        <div><span class="t-out">✓ M365 tenant scanned</span></div>
+        <div><span class="t-out">✓ 14 stale accounts found</span></div>
+        <div><span class="t-out">✓ MFA gaps: 3 users</span></div>
+        <div><span class="t-out">✓ License waste: $87/mo</span></div>
+        <div class="t-comment">&nbsp;</div>
+        <div><span class="t-prompt">$ </span><span class="t-cmd">./remediate --auto-fix</span></div>
+        <div><span class="t-out">✓ Accounts deprovisioned</span></div>
+        <div><span class="t-out">✓ MFA enforced</span></div>
+        <div><span class="t-out">✓ Licenses reclaimed</span></div>
+        <div class="t-comment"># Report sent to info@nerdops.com</div>
+        <div><span class="t-prompt">$ </span><span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-info">
+      <div class="section-tag">// GET IN TOUCH</div>
+      <h2>Let's Fix Your IT.</h2>
+      <p>Start with a free 20-minute audit call. No pitch, no obligation — just an honest look at your setup and what we can improve.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div>
+            <div class="contact-item-label">EMAIL</div>
+            <div class="contact-item-val">info@nerdops.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⏱️</div>
+          <div>
+            <div class="contact-item-label">RESPONSE TIME</div>
+            <div class="contact-item-val">Within 24 hours</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🆓</div>
+          <div>
+            <div class="contact-item-label">FREE AUDIT</div>
+            <div class="contact-item-val">No cost, no commitment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form id="contactForm" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div>
+          <label for="fname">FIRST NAME</label>
+          <input type="text" id="fname" placeholder="Jane" required />
+        </div>
+        <div>
+          <label for="lname">LAST NAME</label>
+          <input type="text" id="lname" placeholder="Smith" required />
+        </div>
+      </div>
+      <div>
+        <label for="email">BUSINESS EMAIL</label>
+        <input type="email" id="email" placeholder="jane@company.com" required />
+      </div>
+      <div>
+        <label for="service">SERVICE NEEDED</label>
+        <select id="service" required>
+          <option value="" disabled selected>Select a service…</option>
+          <option>Microsoft 365 Administration</option>
+          <option>Okta Identity Management</option>
+          <option>Active Directory Health Check</option>
+          <option>Network Setup & Deployment</option>
+          <option>CCTV Deployment</option>
+          <option>VoIP Phone System</option>
+          <option>Zoom Administration</option>
+          <option>Monthly IT Retainer</option>
+          <option>Not sure — I need an audit</option>
+        </select>
+      </div>
+      <div>
+        <label for="message">TELL US ABOUT YOUR SETUP</label>
+        <textarea id="message" placeholder="How many users? What systems are you using? What's not working?"></textarea>
+      </div>
+      <button type="submit" class="form-submit">
+        Send Message →
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <a href="#hero" class="footer-brand">
+    <svg viewBox="0 0 68 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="34,3 62,20 62,55 34,72 6,55 6,20" fill="#030a14" stroke="#1a8fff" stroke-width="1.8"/>
+      <polygon points="34,10 57,24 57,51 34,65 11,51 11,24" fill="none" stroke="#1a8fff" stroke-width="0.6" stroke-dasharray="3,2.5" opacity="0.4"/>
+      <polygon points="34,3 62,20 48,20 34,10 20,20 6,20" fill="#071828" opacity="0.9"/>
+      <line x1="34" y1="3" x2="34" y2="10" stroke="#1a8fff" stroke-width="2.2"/>
+      <rect x="13" y="32" width="19" height="15" rx="6" fill="none" stroke="#1a8fff" stroke-width="2.2"/>
+      <rect x="36" y="32" width="19" height="15" rx="6" fill="none" stroke="#1a8fff" stroke-width="2.2"/>
+      <line x1="32" y1="39.5" x2="36" y2="39.5" stroke="#1a8fff" stroke-width="2.2"/>
+      <line x1="13" y1="39.5" x2="9" y2="39.5" stroke="#1a8fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="55" y1="39.5" x2="59" y2="39.5" stroke="#1a8fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Nerd<em>Ops</em></span>
+  </a>
+  <div class="footer-copy">© 2024 NerdOps · info@nerdops.com · Author: Carlos Cuevas</div>
+</footer>
+
+<script>
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = '✓ Message Sent!';
+    btn.style.background = '#1a5faa';
+    setTimeout(() => {
+      btn.innerHTML = 'Send Message →';
+      btn.style.background = '';
+      e.target.reset();
+    }, 3000);
+  }
+</script>
+</body>
+</html>
